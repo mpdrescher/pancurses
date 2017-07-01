@@ -9,6 +9,8 @@ extern crate ncurses;
 
 use std::ffi::CString;
 use std::ptr;
+use std::os::raw::c_char;
+use std::env;
 
 #[cfg(windows)]
 use pdcurses as curses;
@@ -637,6 +639,18 @@ pub fn has_colors() -> bool {
 /// Initialize the curses system, this must be the first function that is called.
 ///
 /// Returns a Window struct that is used to access Window specific functions.
+#[cfg(windows)]
+pub fn initscr() -> Window {
+    let mut args = env::args();
+    let count: ::std::os::raw::c_int = 1;
+    let string = args.next().unwrap();
+    let c_str = format!("{}\0", string).chars().map(|x| x as c_char).collect::<Vec<c_char>>().as_mut_ptr();
+    let arg_vec = vec!(c_str).as_mut_ptr();
+    platform_specific::pre_init();
+    let window_pointer = unsafe { curses::Xinitscr(count, arg_vec) };
+    Window { _window: window_pointer }
+}
+#[cfg(unix)]
 pub fn initscr() -> Window {
     platform_specific::pre_init();
     let window_pointer = unsafe { curses::initscr() };
