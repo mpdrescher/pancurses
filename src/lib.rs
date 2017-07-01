@@ -645,7 +645,7 @@ pub fn initscr() -> Window {
     Window { _window: window_pointer }
 }
 
-#[cfg(Windows)]
+#[cfg(windows)]
 pub fn xinitscr() -> Window {
     let mut args = env::args();
     let count: ::std::os::raw::c_int = 1;
