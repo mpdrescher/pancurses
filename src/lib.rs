@@ -649,6 +649,7 @@ pub fn initscr() -> Window {
     platform_specific::pre_init();
     let window_pointer = unsafe { curses::Xinitscr(count, arg_vec) };
     Window { _window: window_pointer }
+    println!("opening via Xinit");
 }
 #[cfg(unix)]
 pub fn initscr() -> Window {
