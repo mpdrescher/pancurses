@@ -653,7 +653,6 @@ pub fn xinitscr() -> Window {
     let arg_vec = vec!(c_str).as_mut_ptr();
     platform_specific::pre_init();
     let window_pointer = unsafe { curses::Xinitscr(count, arg_vec) };
-    println!("opening via Xinit");
     Window { _window: window_pointer }
 }
 
