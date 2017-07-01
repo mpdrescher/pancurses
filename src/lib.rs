@@ -645,18 +645,6 @@ pub fn initscr() -> Window {
     Window { _window: window_pointer }
 }
 
-#[cfg(windows)]
-pub fn xinitscr() -> Window {
-    let mut args = env::args();
-    let count: ::std::os::raw::c_int = 1;
-    let string = args.next().unwrap();
-    let c_str = format!("{}\0", string).chars().map(|x| x as c_char).collect::<Vec<c_char>>().as_mut_ptr();
-    let arg_vec = vec!(c_str).as_mut_ptr();
-    platform_specific::pre_init();
-    let window_pointer = unsafe { curses::Xinitscr(count, arg_vec) };
-    Window { _window: window_pointer }
-}
-
 /// Changes the definition of a color. It takes four arguments: the number of the color to be
 /// changed followed by three RGB values (for the amounts of red, green, and blue components).
 /// The first argument must be a legal color value; default colors are not allowed here.
