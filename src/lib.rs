@@ -639,8 +639,13 @@ pub fn has_colors() -> bool {
 /// Initialize the curses system, this must be the first function that is called.
 ///
 /// Returns a Window struct that is used to access Window specific functions.
-#[cfg(windows)]
 pub fn initscr() -> Window {
+    platform_specific::pre_init();
+    let window_pointer = unsafe { curses::initscr() };
+    Window { _window: window_pointer }
+}
+
+pub fn xinitscr() -> Window {
     let mut args = env::args();
     let count: ::std::os::raw::c_int = 1;
     let string = args.next().unwrap();
@@ -649,12 +654,6 @@ pub fn initscr() -> Window {
     platform_specific::pre_init();
     let window_pointer = unsafe { curses::Xinitscr(count, arg_vec) };
     println!("opening via Xinit");
-    Window { _window: window_pointer }
-}
-#[cfg(unix)]
-pub fn initscr() -> Window {
-    platform_specific::pre_init();
-    let window_pointer = unsafe { curses::initscr() };
     Window { _window: window_pointer }
 }
 
